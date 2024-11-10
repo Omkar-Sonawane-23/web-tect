@@ -210,16 +210,30 @@
     <script>
         // Initialize map
         var map = L.map('map').setView([51.505, -0.09], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
 
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(map);
+    // Get user's location and set marker
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            var userLat = 19.0748;
+            var userLon = 72.8856;
+            
+            // Update map view to user's location
+            map.setView([userLat, userLon], 13);
 
-        // Example marker for demonstration
-        L.marker([51.5, -0.09]).addTo(map)
-            .bindPopup('Our Location')
-            .openPopup();
-
+            // Add marker at user's location
+            var marker = L.marker([userLat, userLon]).addTo(map)
+                .bindPopup("Here We are!")
+                .openPopup();
+        }, function(error) {
+            console.error("Geolocation error:", error);
+            alert("Could not retrieve your location.");
+        });
+    } else {
+        alert("Geolocation is not supported by this browser.");
+    }
         // Text-to-Speech functionality
         let synth = window.speechSynthesis;
         let utterance;

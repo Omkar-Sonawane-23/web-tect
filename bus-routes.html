@@ -133,28 +133,64 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>1A</td>
-                                <td>Main Station</td>
-                                <td>Central Park</td>
-                                <td>Station A, Station B, Station C</td>
-                                <td>Yes</td>
-                            </tr>
-                            <tr>
-                                <td>2B</td>
-                                <td>East Side</td>
-                                <td>West End</td>
-                                <td>Station D, Station E, Station F</td>
-                                <td>No</td>
-                            </tr>
-                            <tr>
-                                <td>3C</td>
-                                <td>North Plaza</td>
-                                <td>South Gate</td>
-                                <td>Station G, Station H, Station I</td>
-                                <td>Yes</td>
-                            </tr>
-                        </tbody>
+    <tr onclick="showRouteOnMap(18.5192, 73.8567, 'Shivaji Nagar (101)')">
+        <td>101</td>
+        <td>Shivaji Nagar</td>
+        <td>Swargate</td>
+        <td>Deccan, Tilak Road, Sarasbaug</td>
+        <td>Yes</td>
+    </tr>
+    <tr onclick="showRouteOnMap(18.5204, 73.8567, 'Pune Station (102)')">
+        <td>102</td>
+        <td>Pune Station</td>
+        <td>Vishrantwadi</td>
+        <td>MG Road, Camp, Alka Talkies</td>
+        <td>No</td>
+    </tr>
+    <tr onclick="showRouteOnMap(18.5211, 73.9291, 'Hadapsar (103)')">
+        <td>103</td>
+        <td>Hadapsar</td>
+        <td>Katraj</td>
+        <td>Magarpatta, Wanowrie, Kondhwa</td>
+        <td>Yes</td>
+    </tr>
+    <tr onclick="showRouteOnMap(18.5081, 73.8030, 'Kothrud (104)')">
+        <td>104</td>
+        <td>Kothrud</td>
+        <td>Karvenagar</td>
+        <td>Paud Road, Warje, Baner</td>
+        <td>Yes</td>
+    </tr>
+    <tr onclick="showRouteOnMap(18.5772, 73.7482, 'Hinjewadi (105)')">
+        <td>105</td>
+        <td>Hinjewadi</td>
+        <td>Pimpri-Chinchwad</td>
+        <td>Akurdi, Thergaon, Chinchwad</td>
+        <td>No</td>
+    </tr>
+    <tr onclick="showRouteOnMap(18.5634, 73.9217, 'Viman Nagar (106)')">
+        <td>106</td>
+        <td>Viman Nagar</td>
+        <td>Magarpatta</td>
+        <td>Pune Airport, Kalyani Nagar, Hadapsar</td>
+        <td>Yes</td>
+    </tr>
+    <tr onclick="showRouteOnMap(18.5142, 73.8619, 'Kasba Peth (107)')">
+        <td>107</td>
+        <td>Kasba Peth</td>
+        <td>Shivajinagar</td>
+        <td>Ranjangaon, Shivaji Market</td>
+        <td>No</td>
+    </tr>
+    <tr onclick="showRouteOnMap(18.5204, 73.9076, 'Koregaon Park (108)')">
+        <td>108</td>
+        <td>Koregaon Park</td>
+        <td>Pimpri</td>
+        <td>Camp, MG Road, Koregaon</td>
+        <td>Yes</td>
+    </tr>
+</tbody>
+
                     </table>
                 </div>
             </div>
@@ -177,40 +213,40 @@
 
     <script>
         // Initialize map
-        var map = L.map('map').setView([51.505, -0.09], 13);
+        var map = L.map('map').setView([18.5204, 73.8567], 13);
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
 
-        // Example markers for demonstration
-        var busRoutes = [
-            { lat: 51.505, lng: -0.09, name: 'Route 1A' },
-            { lat: 51.515, lng: -0.1, name: 'Route 2B' },
-            { lat: 51.525, lng: -0.08, name: 'Route 3C' }
-        ];
+        // Function to show route on map when clicked
+        function showRouteOnMap(lat, lng, routeName) {
+            // Clear any previous markers
+            map.eachLayer(function (layer) {
+                if (layer instanceof L.Marker) {
+                    map.removeLayer(layer);
+                }
+            });
 
-        busRoutes.forEach(function(route) {
-            L.marker([route.lat, route.lng]).addTo(map)
-                .bindPopup(route.name)
-                .openPopup();
-        });
+            // Add a new marker for the selected route
+            var marker = L.marker([lat, lng]).addTo(map);
+            marker.bindPopup("<b>" + routeName + "</b>").openPopup();
 
-        // Text-to-Speech functionality
-        let synth = window.speechSynthesis;
-        let utterance;
+            // Center map to the selected route
+            map.setView([lat, lng], 13);
+        }
+
+        // Function for Text-to-Speech
+        var utterance;
 
         function startSpeech() {
-            const textToRead = document.body.innerText; // Reads the entire body content
-            utterance = new SpeechSynthesisUtterance(textToRead);
-            utterance.pitch = 1;
-            utterance.rate = 1;
-            synth.speak(utterance);
+            utterance = new SpeechSynthesisUtterance('Welcome to the Bus Routes Page. Click a route to see it on the map.');
+            speechSynthesis.speak(utterance);
         }
 
         function stopSpeech() {
-            if (synth.speaking) {
-                synth.cancel();  // Stops the current speech
+            if (utterance) {
+                speechSynthesis.cancel(utterance);
             }
         }
     </script>
